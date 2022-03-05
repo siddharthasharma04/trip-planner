@@ -19,4 +19,4 @@ Screen 2
 
 ## Note:-
 
-This will create a peer-to-peer connection between nodes and the can track eachother on the map.
+This will create a peer-to-peer connection between nodes and they can track eachother on the map.
