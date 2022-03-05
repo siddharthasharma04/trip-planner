@@ -4,7 +4,7 @@
 
 
 ----------------------------------------------------------------
-[Check Here](https://siddharthasharma04.github.io/trip-planner/)
+Demo: [Check Here](https://siddharthasharma04.github.io/trip-planner/)
 ----------------------------------------------------------------
 
 
