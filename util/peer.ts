@@ -22,12 +22,19 @@ const usersLocation = {};
 
 const onPeerData = (data, cb) => {
     const msg = data.split('##');
-    console.log("Mess", msg)
+    // console.log("Mess", msg)
     if (msg[0].includes('user')) {
         const username = msg[1];
         const loc = JSON.parse(msg[2]);
         usersLocation[username] = { location: loc, color: msg[3] };
         cb(usersLocation);
+    }
+    if (msg[0].includes("Reconnected")) {
+        delete connect[msg[1]];
+        setTimeout(() => {
+            // peer._connections.delete(msg[1]);
+            connectToOther(msg[1]);
+        }, 50)
     }
 }
 const msgSendToPeers = (color) => {
@@ -109,12 +116,17 @@ const startMsgDataSending = () => {
     setInterval(() => { msgSendToPeers(color) }, 1000)
 }
 
-function setOtherUserInLocal(id){
+function isAlreadyExist(otherUsers: string, id: string) {
+    const others: string[] = otherUsers.split('#,#');
+    return others.findIndex((v) => (v === id)) !== -1;
+}
+function setOtherUserInLocal(id) {
+    console.log(id);
     let otherUsers = window.localStorage.getItem('_oid')
-    if(otherUsers){
+    if (otherUsers && !isAlreadyExist(otherUsers, id)) {
         otherUsers += `#,#${id}`;
     }
-    window.localStorage.setItem('_oid',(otherUsers || id));
+    window.localStorage.setItem('_oid', (otherUsers || id));
 }
 
 export function connectToOther(id) {
@@ -129,6 +141,12 @@ export function connectToOther(id) {
     conn?.on('open', () => {
         conn.send(`${user} : Hi!!`);
     });
+    conn.on('error', (e) => {
+        // console.log("Normal")
+    })
+    conn.on('close', (e) => {
+        console.log("Closed")
+    })
     !isMsgSendOn && startMsgDataSending();
     return connect; // return connection
 }
@@ -143,8 +161,12 @@ export function initOthersConnections() {
                 const conn = peer.connect(v);
                 connect[v] = conn;
                 conn?.on('open', () => {
-                    conn.send(`${user} : Hi!! Reconnected`);
+                    conn.send(`${user} :Reconnected##${peer.id}`);
                 });
+                conn.on('error', (e) => {
+                    // console.log("Halted")
+                })
+                conn.on('close', (e) => { console.log(e, "Closed", v) })
                 !isMsgSendOn && startMsgDataSending();
             }
         })

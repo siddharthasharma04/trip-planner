@@ -13,14 +13,31 @@ const errors = (err) => {
     console.warn(`ERROR(${err.code}): ${err.message}`);
 }
 
+
+const registerLocationWatch = (cb) => {
+    const success = (pos) => {
+        const crd = pos.coords;
+        const { lat, lng} = location;
+        if(crd.latitude !== lat || crd.longitude !== lng){
+            console.log("success",location)
+            location = { lat: crd.latitude, lng: crd.longitude };
+            cb(location);
+        }
+    }
+    // navigator.geolocation.watchPosition(success, ()=>{console.log("ERROR from here")}, options)
+    setInterval(()=>{
+        navigator.geolocation.getCurrentPosition(success);
+    },60);
+}
 const useGeoLocation = (cb) => {
     
     const success = (pos) => {
-        var crd = pos.coords;
+        const crd = pos.coords;
         console.log(`More or less ${crd.accuracy} meters.`);
         // setLocalLocation()
         location = { lat: crd.latitude, lng: crd.longitude };
         cb(location)
+        registerLocationWatch(cb);
     }
 
     if (!isNode) {
@@ -52,20 +69,10 @@ const useGeoLocation = (cb) => {
 }
 
 export const getCurrentLocation = () => {
-    const [geolocation, setGeoLocation] = useState(null);
-    if (location) {
-        if(location.lat !== geolocation?.lat && location.lng !== geolocation?.lng){
-            const success = (pos) => {
-                var crd = pos.coords;
-                console.log("success",location)
-                location = { lat: crd.latitude, lng: crd.longitude };
-                setGeoLocation(location);
-            }
-            navigator.geolocation.watchPosition(success, ()=>{console.log("ERROR from here")}, options)
-        }
-    } else {
-        useGeoLocation(setGeoLocation)
-    }
+    const [geolocation, setGeoLocation] = useState(location || null);
+   
+     !location &&  useGeoLocation(setGeoLocation)
+    
     return { geolocation };
 }
 

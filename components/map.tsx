@@ -6,18 +6,26 @@ import { useRef } from 'react';
 import { Children, isValidElement, cloneElement } from 'react';
 import { useDeepCompareEffectForMaps } from '../util/deep-compare';
 import { mapStyle } from '../util/mapStyle';
-import {paths} from "../util/path";
-import response from "../util/google.map.data.json";
+import { paths } from "../util/path";
+// import response from "../util/google.map.data.json";
+import { Button } from "@chakra-ui/react";
 
+import CurrentIcon from "./icons/current-icon";
 
 interface MapProps extends google.maps.MapOptions {
   style?: { [key: string]: string };
   onClick?: (e: google.maps.MapMouseEvent) => void;
   onIdle?: (map: google.maps.Map) => void;
+  location: {
+    lat: number,
+    lng: number
+  };
+  isRecenter?: boolean;
+  setIsCenter?:(a:boolean)=>void
 }
 
 
-const MapComponent: React.FC<MapProps> = ({ onClick, onIdle, children, style, ...options }) => {
+const MapComponent: React.FC<MapProps> = ({ onClick, onIdle, isRecenter, setIsCenter, location, children, style, ...options }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<google.maps.Map>();
 
@@ -32,13 +40,13 @@ const MapComponent: React.FC<MapProps> = ({ onClick, onIdle, children, style, ..
     styles: mapStyle
   };
 
-  const directionsRenderer = new google.maps.DirectionsRenderer();
+  // const directionsRenderer = new google.maps.DirectionsRenderer();
   // const directionsService = new google.maps.DirectionsService();
   useEffect(() => {
     if (ref.current && !map) {
       const _innerMap = new window.google.maps.Map(ref.current, {});
       setMap(_innerMap);
-      const megaPath = paths.reduce((acc,v) => ([...acc,...v.path]),[]);
+      const megaPath = paths.reduce((acc, v) => ([...acc, ...v.path]), []);
       setTimeout(() => {
         // const flightPlanCoordinates = [
         //   { lat: 34.152011, lng: 77.578305 },
@@ -50,20 +58,20 @@ const MapComponent: React.FC<MapProps> = ({ onClick, onIdle, children, style, ..
 
           path: megaPath,
           geodesic: true,
-          strokeColor: "#FF0000",
+          strokeColor: "#333333",
           strokeOpacity: 0.8,
-          strokeWeight: 4,
+          strokeWeight: 6,
         });
 
         // console.log(flightPath.getPath(), "Poly Path")//.push("c`ojD_j_wMgE~@wAf@u@pAG\\CJCf@AfAL~@f@bAt@z@t@j@t@JfA?bBg@dA_ARo@r@cF")
 
-        // flightPath.setMap(_innerMap);
+        flightPath.setMap(_innerMap);
       }, 500)
 
 
 
 
-      directionsRenderer.setMap(_innerMap);
+      // directionsRenderer.setMap(_innerMap);
 
       // http://router.project-osrm.org/route/v1/driving/34.1663277,77.5317188;27.5019715,77.6650548?overview=false
       // directionsService
@@ -76,7 +84,7 @@ const MapComponent: React.FC<MapProps> = ({ onClick, onIdle, children, style, ..
       //     travelMode: google.maps.TravelMode['DRIVING'],
       //   })
       //   .then((response) => {
-      directionsRenderer.setDirections((response as any));
+      // directionsRenderer.setDirections((response as any));
       //   })
       //   .catch((e) => window.alert("Directions request failed due to " + status));
     }
@@ -109,7 +117,8 @@ const MapComponent: React.FC<MapProps> = ({ onClick, onIdle, children, style, ..
   return (
     <>
       <div ref={ref} style={{ ...style, flexGrow: "1", height: "100%", width: "100%" }} />
-      {Children.map(children, (child) => {
+      {/* <Button pos="fixed" bottom="6" right="4" colorScheme="teal" fontSize="20px" p="0.5" size="sm" onClick={() => { map.panTo(location); map.setZoom(18) }}><CurrentIcon /></Button> */}
+      {isRecenter && <Button pos="fixed" colorScheme="teal" zIndex="2" size="sm" bottom="6" right="4" onClick={() => { map.panTo(location); map.setZoom(18); setIsCenter(false) }}><CurrentIcon /></Button>}      {Children.map(children, (child) => {
         if (isValidElement(child)) {
           // set the map prop on the child component
           return cloneElement(child, { map });

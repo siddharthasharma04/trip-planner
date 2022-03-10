@@ -14,4 +14,10 @@ const useLocalUser = (): { localUserId: string, setLocalUserId: (a: string) => v
     return { localUserId, setLocalUserId };
 };
 
+export const deleteUser = () =>{
+    window.localStorage.removeItem('_mid');
+    window.localStorage.removeItem('_oid');
+    setTimeout(()=>{window.location.reload();},200);
+}
+
 export default useLocalUser;

@@ -39,7 +39,7 @@ export const mapStyle = [{
     "elementType": "geometry.fill",
     "stylers": [
       {
-        "color": "#dde2e3"
+        "color": "#ffffff"
       }
     ]
   },
@@ -57,7 +57,7 @@ export const mapStyle = [{
     "elementType": "geometry.fill",
     "stylers": [
       {
-        "color": "#dde2e3"
+        "color": "#ffffff"
       }
     ]
   },
@@ -83,7 +83,7 @@ export const mapStyle = [{
     "elementType": "geometry.fill",
     "stylers": [
       {
-        "color": "#dde2e3"
+        "color": "#ffffff"
       }
     ]
   },
@@ -92,7 +92,7 @@ export const mapStyle = [{
     "elementType": "labels.icon",
     "stylers": [
       {
-        "saturation": -100
+        "color":"#bcbcbc"
       }
     ]
   },
@@ -101,7 +101,7 @@ export const mapStyle = [{
     "elementType": "labels.text.fill",
     "stylers": [
       {
-        "color": "#588ca4"
+        "color": "#bcbcbc"
       }
     ]
   },
@@ -161,7 +161,7 @@ export const mapStyle = [{
     "elementType": "labels.text.fill",
     "stylers": [
       {
-        "color": "#41626b"
+        "color": "#000000"
       }
     ]
   },
@@ -170,7 +170,7 @@ export const mapStyle = [{
     "elementType": "geometry.fill",
     "stylers": [
       {
-        "color": "#ffffff"
+        "color": "#e5eced"
       }
     ]
   },
@@ -215,7 +215,7 @@ export const mapStyle = [{
     "elementType": "geometry.fill",
     "stylers": [
       {
-        "color": "#ffffff"
+        "color": "#e5eced"
       }
     ]
   },

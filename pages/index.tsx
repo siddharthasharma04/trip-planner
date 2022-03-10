@@ -10,23 +10,24 @@ import {
 import Router from 'next/router';
 import { useEffect, useState } from 'react';
 import MapPage from '../components/map-page';
+import { getCurrentLocation } from '../util/geo-location';
 import { setPeer } from '../util/peer';
 import useLocalUser from '../util/useLocalUser';
 import { setUser } from '../util/user';
 
 
-export default function Home({ location }) {
+export default function Home() {
   const [username, setUsername] = useState("");
   const [isHomePage, setIsHomePage] = useState(true);
   const [peerId, setPeerId] = useState("");
   const [otherUsers, setOtherUsers] = useState({});
   const {localUserId, setLocalUserId} = useLocalUser();
 
+  const { geolocation: location } = getCurrentLocation()
+
   const {usr, id} = JSON.parse(localUserId || "{}");
   useEffect(()=>{
-    console.log("effect muchmore");
     if(localUserId){
-        
         (async ()=>{
           setUsername(usr);
           setUser(usr);
